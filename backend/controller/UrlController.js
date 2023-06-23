@@ -32,6 +32,7 @@ const createUrl = catchAsync(async (req, res, next) => {
 const deleteUrl = (req, res, next) => {};
 const fetchUrl = catchAsync(async (req, res, next) => {
   const shortUrl = req.params.id;
+  console.log(shortUrl);
   const url = await Url.findOne({ shortUrl: shortUrl });
   if (!url) throw new Error("Url not found");
   res.status(200).json({

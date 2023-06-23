@@ -4,9 +4,11 @@ const mongoose = require("mongoose");
 const urlRoutes = require("./routes/UrlRoutes");
 const { errorConverter, errorHandler } = require("./utils/ErrorHandler");
 require("dotenv").config();
+const cors = require("cors");
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded((extended = true)));
 app.use(bodyParser.json());
 
