@@ -1,10 +1,11 @@
-"use client";
-import React from "react";
 import PrimaryBtn from "./PrimaryBtn";
+import { User } from "../utils/types/User";
 
-type Props = {};
+type Props = {
+  user: User | null;
+};
 
-const InputBox = (props: Props) => {
+const InputBox = ({ user }: Props) => {
   return (
     <div className="flex flex-row border-2 border-[#353C4A] rounded-full bg-[#181E29]">
       <div className="flex flex-row flex-grow">

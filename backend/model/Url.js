@@ -7,6 +7,7 @@ const urlSchema = mongoose.Schema({
   password: { type: String },
   clicks: { type: Number, default: 0 },
   created: { type: Date, default: Date.now },
+  isActive: { type: Boolean, default: true },
 });
 
 module.exports = mongoose.model("Url", urlSchema);

@@ -1,11 +1,22 @@
 const catchAsync = require("../utils/catchAsync");
 var base62 = require("base62-random");
 const Url = require("../model/Url");
+const User = require("../model/User");
 
 const getUserUrls = catchAsync(async (req, res, next) => {
   const uid = req.query.id;
+  const user = await User.findById(uid).populate("urls");
   console.log(uid);
-  const urls = await Url.find({ user: uid });
+  const urls = user.urls;
+  console.log(urls);
+  urls.sort(function (a, b) {
+    var keyA = new Date(a.created),
+      keyB = new Date(b.created);
+    // Compare the 2 dates
+    if (keyA < keyB) return 1;
+    if (keyA > keyB) return -1;
+    return 0;
+  });
   res.status(200).json({
     status: "success",
     data: urls,
@@ -32,6 +43,9 @@ const createUrl = catchAsync(async (req, res, next) => {
     longUrl: longUrl,
     user: uid,
   });
+  const user = await User.findById(uid);
+  user.urls.push(url._id);
+  await user.save();
   res.status(201).json({
     status: "success",
     data: {
@@ -45,6 +59,8 @@ const fetchUrl = catchAsync(async (req, res, next) => {
   console.log(shortUrl);
   const url = await Url.findOne({ shortUrl: shortUrl });
   if (!url) throw new Error("Url not found");
+  url.clicks += 1;
+  await url.save();
   res.status(200).json({
     status: "success",
     data: url.longUrl,

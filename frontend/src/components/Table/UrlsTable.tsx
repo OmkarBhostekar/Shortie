@@ -1,54 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TableRow from "./TableRow";
 import { Url } from "../../utils/types/Url";
+import { User } from "../../utils/types/User";
+import axios from "axios";
 
-type Props = {};
+type Props = {
+  user: User | null;
+};
 
-const UrlsTable = (props: Props) => {
-  const urls: Url[] = [
-    {
-      shortUrl: "https://shortie.com/Bn41aCOlnxj",
-      longUrl: "https://www.google.com",
-      clicks: 1223,
-      isActive: true,
-      createdAt: "2023-06-24T15:00:00.000Z",
-    },
-    {
-      shortUrl: "https://shortie.com/BncdaCOlnxj",
-      longUrl: "https://codeforces.com/profile/omkarbhostekar",
-      clicks: 998,
-      isActive: true,
-      createdAt: "2022-12-21T15:00:00.000Z",
-    },
-    {
-      shortUrl: "https://shortie.com/An21aCOlnxj",
-      longUrl: "https://leetcode.com/omkarbhostekar/",
-      clicks: 726,
-      isActive: true,
-      createdAt: "2022-12-10T15:00:00.000Z",
-    },
-    {
-      shortUrl: "https://shortie.com/Bn41aCOlnxj",
-      longUrl: "https://www.linkedin.com/in/omkar-bhostekar",
-      clicks: 267,
-      isActive: true,
-      createdAt: "2022-08-21T15:00:00.000Z",
-    },
-    {
-      shortUrl: "https://shortie.com/Bn41aCOvcd",
-      longUrl: "https://www.twitter.com",
-      clicks: 23,
-      isActive: false,
-      createdAt: "2022-05-25T15:00:00.000Z",
-    },
-    {
-      shortUrl: "https://shortie.com/Bn41aCOvcd",
-      longUrl: "https://www.facebook.com",
-      clicks: 0,
-      isActive: false,
-      createdAt: "2021-06-02T15:00:00.000Z",
-    },
-  ];
+const UrlsTable = ({ user }: Props) => {
+  const [urls, seturls] = useState<Url[]>([]);
+
+  const fetchUrls = async () => {
+    const res = await axios
+      .get(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls?id=${user?.id}`)
+      .then((response) => {
+        return response.data.data;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+    seturls(res);
+  };
+
+  useEffect(() => {
+    fetchUrls();
+  }, []);
 
   return (
     <div className="mt-10 md:mx-12">

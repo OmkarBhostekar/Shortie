@@ -3,6 +3,7 @@ import Home from "./pages/Home";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { useAuthContext } from "./utils/hooks/useAuthContext";
 import Dashboard from "./pages/Dashboard";
+import RedirectPage from "./pages/RedirectPage";
 function App() {
   const { user } = useAuthContext();
   console.log("user ", user);
@@ -14,8 +15,9 @@ function App() {
           <Routes>
             <Route
               path="/"
-              element={user !== null ? <Dashboard /> : <Home />}
+              element={user !== null ? <Dashboard user={user} /> : <Home />}
             />
+            <Route path="/:shortUrl" element={<RedirectPage />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>

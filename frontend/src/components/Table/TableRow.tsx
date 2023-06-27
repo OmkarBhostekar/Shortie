@@ -11,7 +11,7 @@ type Props = {
 };
 
 const TableRow = ({ url }: Props) => {
-  const dateFormatted = new Date(url.createdAt).toLocaleDateString("en-US", {
+  const dateFormatted = new Date(url.created).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
@@ -20,7 +20,9 @@ const TableRow = ({ url }: Props) => {
     <tr className="bg-[#181E29]/25 text-[#C9CED6] text-xs dark:bg-gray-800 dark:border-gray-700">
       <td className="px-6 py-4">
         <div className="flex flex-row items-center">
-          <div>{url.shortUrl}</div>
+          <div>
+            {window.location.hostname}/{url.shortUrl}
+          </div>
           <div className="ml-4 p-2 bg-[#1C283F] rounded-full flex items-center justify-center cursor-pointer">
             <DocumentDuplicateIcon className="w-3 h-3" />
           </div>
@@ -39,7 +41,7 @@ const TableRow = ({ url }: Props) => {
       <td className="px-6 py-4 cursor-pointer flex items-center justify-center">
         <QrCodeIcon className="w-8 h-8 opacity-70" />
       </td>
-      <td className="px-6 py-4 text-center">{url.clicks}</td>
+      <td className="px-6 py-4 text-center">{url.clicks / 2}</td>
       <td className="px-6 py-4 text-center">
         {url.isActive ? <ActiveLink /> : <InActiveLink />}
       </td>

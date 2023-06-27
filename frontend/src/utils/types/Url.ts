@@ -2,6 +2,6 @@ export type Url = {
   shortUrl: string;
   longUrl: string;
   clicks: number;
-  createdAt: string;
+  created: string;
   isActive: boolean;
 };

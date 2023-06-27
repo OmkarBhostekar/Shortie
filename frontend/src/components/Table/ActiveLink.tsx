@@ -2,7 +2,7 @@ import { LinkIcon } from "@heroicons/react/24/outline";
 
 type Props = {};
 
-const ActiveLink = (props: Props) => {
+const ActiveLink = () => {
   return (
     <div className="flex flex-row items-center justify-center">
       <div className="text-[#1EB036] mr-3 text-xs">Active</div>
