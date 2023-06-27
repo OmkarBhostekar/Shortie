@@ -16,7 +16,7 @@ const Hero = (props: Props) => {
         Shortie is an efficient and easy-to-use URL shortening service <br />
         that streamlines your online experience.
       </div>
-      <InputBox />
+      <InputBox user={null} />
       <div className="mt-4"></div>
       <Switch
         color="blue"

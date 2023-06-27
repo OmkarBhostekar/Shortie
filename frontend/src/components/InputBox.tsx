@@ -13,6 +13,7 @@ const InputBox = ({ user }: Props) => {
   const [url, seturl] = useState<string>("");
 
   const onSubmit = async () => {
+    if (!user) return showNotification("Please login to shorten the url");
     if (url === "") return;
     await axios
       .post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls`, {
