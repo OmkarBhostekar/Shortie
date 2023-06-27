@@ -1,30 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import TableRow from "./TableRow";
-import { Url } from "../../utils/types/Url";
 import { User } from "../../utils/types/User";
-import axios from "axios";
+import { useAppContext } from "../../utils/hooks/useAppContext";
 
 type Props = {
   user: User | null;
 };
 
 const UrlsTable = ({ user }: Props) => {
-  const [urls, seturls] = useState<Url[]>([]);
-
-  const fetchUrls = async () => {
-    const res = await axios
-      .get(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls?id=${user?.id}`)
-      .then((response) => {
-        return response.data.data;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-    seturls(res);
-  };
+  const { urls, fetchUrls } = useAppContext();
 
   useEffect(() => {
-    fetchUrls();
+    fetchUrls(user?.id as string);
   }, []);
 
   return (
@@ -66,15 +53,5 @@ const UrlsTable = ({ user }: Props) => {
     </div>
   );
 };
-
-// static props
-export async function getStaticProps() {
-  const uid = "649474b992a1dd7ef46c4b88";
-  console.log(uid);
-
-  return {
-    props: {},
-  };
-}
 
 export default UrlsTable;

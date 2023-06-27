@@ -6,6 +6,7 @@ import {
 import InActiveLink from "./InActiveLink";
 import ActiveLink from "./ActiveLink";
 import { Url } from "../../utils/types/Url";
+import { useAppContext } from "../../utils/hooks/useAppContext";
 type Props = {
   url: Url;
 };
@@ -16,12 +17,42 @@ const TableRow = ({ url }: Props) => {
     month: "short",
     day: "numeric",
   });
+
+  const { fetchUrls, showNotification } = useAppContext();
+
+  const toggleActive = async () => {
+    await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls/${url._id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        isActive: !url.isActive,
+      }),
+    });
+    await fetchUrls(url.user);
+    showNotification(
+      `URL ${url.isActive ? "deactivated" : "activated"} successfully!`
+    );
+  };
+
+  const onDelete = async () => {
+    await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls/${url._id}`, {
+      method: "DELETE",
+    });
+    await fetchUrls(url.user);
+    showNotification("URL deleted successfully!");
+  };
+
   return (
     <tr className="bg-[#181E29]/25 text-[#C9CED6] text-xs dark:bg-gray-800 dark:border-gray-700">
       <td className="px-6 py-4">
         <div className="flex flex-row items-center">
           <div>
-            {window.location.hostname}/{url.shortUrl}
+            {window.location.hostname === "localhost"
+              ? "http://localhost:5173"
+              : window.location.hostname}
+            /{url.shortUrl}
           </div>
           <div className="ml-4 p-2 bg-[#1C283F] rounded-full flex items-center justify-center cursor-pointer">
             <DocumentDuplicateIcon className="w-3 h-3" />
@@ -42,12 +73,18 @@ const TableRow = ({ url }: Props) => {
         <QrCodeIcon className="w-8 h-8 opacity-70" />
       </td>
       <td className="px-6 py-4 text-center">{url.clicks / 2}</td>
-      <td className="px-6 py-4 text-center">
+      <td
+        className="px-6 py-4 text-center cursor-pointer"
+        onClick={toggleActive}
+      >
         {url.isActive ? <ActiveLink /> : <InActiveLink />}
       </td>
       <td className="px-6 py-4 text-center">{dateFormatted}</td>
       <td className="px-6 py-4 text-center">
-        <div className="flex items-center justify-center py-2  cursor-pointer bg-[#181E29] border border-[#353C4A] rounded-full">
+        <div
+          className="flex items-center justify-center py-2  cursor-pointer bg-[#181E29] border border-[#353C4A] rounded-full"
+          onClick={onDelete}
+        >
           <TrashIcon className="w-4 h-4 opacity-70" />
         </div>
       </td>

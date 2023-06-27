@@ -4,4 +4,6 @@ export type Url = {
   clicks: number;
   created: string;
   isActive: boolean;
+  _id: string;
+  user: string;
 };

@@ -8,7 +8,7 @@ const getUserUrls = catchAsync(async (req, res, next) => {
   const user = await User.findById(uid).populate("urls");
   console.log(uid);
   const urls = user.urls;
-  console.log(urls);
+  // console.log(urls);
   urls.sort(function (a, b) {
     var keyA = new Date(a.created),
       keyB = new Date(b.created);
@@ -53,12 +53,36 @@ const createUrl = catchAsync(async (req, res, next) => {
     },
   });
 });
-const deleteUrl = (req, res, next) => {};
+const deleteUrl = async (req, res, next) => {
+  const id = req.params.id;
+  const url = await Url.find({ _id: id });
+  if (url.length > 0) {
+    await Url.findByIdAndDelete(id);
+    const user = await User.findById(url[0].user);
+    user.urls.pull(url[0]._id);
+    await user.save();
+  }
+  res.status(200).json({
+    status: "success",
+    data: null,
+  });
+};
+const toggleUrlStatus = catchAsync(async (req, res, next) => {
+  const id = req.params.id;
+  const url = await Url.findById(id);
+  url.isActive = url.isActive != true;
+  await url.save();
+  res.status(200).json({
+    status: "success",
+    data: url,
+  });
+});
 const fetchUrl = catchAsync(async (req, res, next) => {
   const shortUrl = req.params.id;
   console.log(shortUrl);
   const url = await Url.findOne({ shortUrl: shortUrl });
   if (!url) throw new Error("Url not found");
+  if (!url.isActive) throw new Error("Url is not active");
   url.clicks += 1;
   await url.save();
   res.status(200).json({
@@ -67,4 +91,10 @@ const fetchUrl = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { createUrl, deleteUrl, fetchUrl, getUserUrls };
+module.exports = {
+  createUrl,
+  deleteUrl,
+  fetchUrl,
+  getUserUrls,
+  toggleUrlStatus,
+};

@@ -42,6 +42,7 @@ function useLogin() {
         dispatch && dispatch({ type: "LOGIN", payload: json });
       }
       setIsLoading(false);
+      window.location.reload();
     }
   };
   return { login, isLoading, error };
