@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const urlRoutes = require("./routes/UrlRoutes");
+const userRoutes = require("./routes/UserRoutes");
 const { errorConverter, errorHandler } = require("./utils/ErrorHandler");
 require("dotenv").config();
 const cors = require("cors");
@@ -13,6 +14,7 @@ app.use(bodyParser.urlencoded((extended = true)));
 app.use(bodyParser.json());
 
 app.use("/api/urls", urlRoutes);
+app.use("/api/users", userRoutes);
 
 console.log(process.env.MONGODB_URL);
 

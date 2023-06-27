@@ -2,6 +2,16 @@ const catchAsync = require("../utils/catchAsync");
 var base62 = require("base62-random");
 const Url = require("../model/Url");
 
+const getUserUrls = catchAsync(async (req, res, next) => {
+  const uid = req.query.id;
+  console.log(uid);
+  const urls = await Url.find({ user: uid });
+  res.status(200).json({
+    status: "success",
+    data: urls,
+  });
+});
+
 const checkTiny = async (tiny) => {
   const urls = await Url.find({ shortUrl: tiny });
   if (urls.length > 0) {
@@ -41,4 +51,4 @@ const fetchUrl = catchAsync(async (req, res, next) => {
   });
 });
 
-module.exports = { createUrl, deleteUrl, fetchUrl };
+module.exports = { createUrl, deleteUrl, fetchUrl, getUserUrls };
