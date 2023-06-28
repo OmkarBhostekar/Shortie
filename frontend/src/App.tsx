@@ -18,6 +18,7 @@ function App() {
               element={user !== null ? <Dashboard user={user} /> : <Home />}
             />
             <Route path="/:shortUrl" element={<RedirectPage />} />
+            <Route path="*" element={<Home />} />
           </Routes>
         </BrowserRouter>
       </GoogleOAuthProvider>

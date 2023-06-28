@@ -48,7 +48,7 @@ const TableRow = ({ url, onDelete, onQr }: Props) => {
   const shortUrl = `${
     window.location.hostname === "localhost"
       ? "http://localhost:5173"
-      : window.location.hostname
+      : `https://${window.location.hostname}`
   }/${url.shortUrl}`;
 
   return (
