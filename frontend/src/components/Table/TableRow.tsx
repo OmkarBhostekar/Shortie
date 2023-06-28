@@ -7,6 +7,12 @@ import InActiveLink from "./InActiveLink";
 import ActiveLink from "./ActiveLink";
 import { Url } from "../../utils/types/Url";
 import { useAppContext } from "../../utils/hooks/useAppContext";
+import {
+  Popover,
+  PopoverHandler,
+  PopoverContent,
+} from "@material-tailwind/react";
+import { useState } from "react";
 type Props = {
   url: Url;
   onDelete: (id: string) => void;
@@ -51,14 +57,39 @@ const TableRow = ({ url, onDelete, onQr }: Props) => {
       : `https://${window.location.hostname}`
   }/${url.shortUrl}`;
 
+  const triggers = {
+    // onMouseEnter: () => setOpenPopover(true),
+    onMouseLeave: () => setOpenPopover(false),
+  };
+  const [openPopover, setOpenPopover] = useState(false);
+
   return (
     <tr className="bg-[#181E29]/25 text-[#C9CED6] text-xs dark:bg-gray-800 dark:border-gray-700">
       <td className="px-6 py-4">
         <div className="flex flex-row items-center">
           <div>{shortUrl}</div>
-          <div className="ml-4 p-2 bg-[#1C283F] rounded-full flex items-center justify-center cursor-pointer">
-            <DocumentDuplicateIcon className="w-3 h-3" />
-          </div>
+          <Popover
+            placement="bottom"
+            open={openPopover}
+            handler={(clicked: boolean) => {
+              if (clicked) {
+                navigator.clipboard.writeText(shortUrl);
+                setOpenPopover(clicked);
+              }
+            }}
+          >
+            <PopoverHandler {...triggers}>
+              <div className="ml-4 p-2 bg-[#1C283F] rounded-full flex items-center justify-center cursor-pointer">
+                <DocumentDuplicateIcon className="w-3 h-3" />
+              </div>
+            </PopoverHandler>
+            <PopoverContent
+              {...triggers}
+              className="p-2 mt-1 bg-[#1C283F] text-[#C9CED6]"
+            >
+              Shorrtie copied to clipboard!
+            </PopoverContent>
+          </Popover>
         </div>
       </td>
       <td className="px-6 py-4">
@@ -77,7 +108,7 @@ const TableRow = ({ url, onDelete, onQr }: Props) => {
           onClick={() => onQr(shortUrl)}
         />
       </td>
-      <td className="px-6 py-4 text-center">{url.clicks / 2}</td>
+      <td className="px-6 py-4 text-center">{url.clicks}</td>
       <td
         className="px-6 py-4 text-center cursor-pointer"
         onClick={toggleActive}
