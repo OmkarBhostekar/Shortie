@@ -9,25 +9,28 @@ type Props = {
 };
 
 const InputBox = ({ user }: Props) => {
-  const { fetchUrls, showNotification } = useAppContext();
+  const { fetchUrls, showNotification, setCreateModal, setCreateUrl } =
+    useAppContext();
   const [url, seturl] = useState<string>("");
 
   const onSubmit = async () => {
     if (!user) return showNotification("Please login to shorten the url");
     if (url === "") return;
-    await axios
-      .post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls`, {
-        uid: user?.id,
-        longUrl: url,
-      })
-      .then((response) => {
-        seturl("");
-        showNotification("Url Shortened successfully!");
-        fetchUrls(user?.id as string);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    setCreateUrl(url);
+    setCreateModal(true);
+    // await axios
+    //   .post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls`, {
+    //     uid: user?.id,
+    //     longUrl: url,
+    //   })
+    //   .then((response) => {
+    //     seturl("");
+    //     showNotification("Url Shortened successfully!");
+    //     fetchUrls(user?.id as string);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
   };
 
   return (

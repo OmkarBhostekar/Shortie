@@ -9,6 +9,10 @@ export const AppContext = createContext<{
   showNotification: Function;
   noti: string;
   setNoti: Function;
+  createModal: boolean;
+  setCreateModal: Function;
+  createUrl: string;
+  setCreateUrl: Function;
 }>({
   urls: [],
   setUrls: () => {},
@@ -16,11 +20,17 @@ export const AppContext = createContext<{
   showNotification: () => {},
   noti: "",
   setNoti: () => {},
+  createModal: false,
+  setCreateModal: () => {},
+  createUrl: "",
+  setCreateUrl: () => {},
 });
 
 export function AppContextProvider({ children }: any) {
   const [urls, setUrls] = useState<Url[]>([]);
   const [noti, setNoti] = useState<string>("");
+  const [createModal, setCreateModal] = useState(false);
+  const [createUrl, setCreateUrl] = useState("");
 
   const showNotification = (message: string) => {
     setNoti(message);
@@ -44,7 +54,18 @@ export function AppContextProvider({ children }: any) {
 
   return (
     <AppContext.Provider
-      value={{ urls, setUrls, fetchUrls, showNotification, noti, setNoti }}
+      value={{
+        urls,
+        setUrls,
+        fetchUrls,
+        showNotification,
+        noti,
+        setNoti,
+        createModal,
+        setCreateModal,
+        createUrl,
+        setCreateUrl,
+      }}
     >
       {children}
     </AppContext.Provider>

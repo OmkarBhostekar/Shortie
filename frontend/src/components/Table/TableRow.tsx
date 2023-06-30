@@ -93,13 +93,13 @@ const TableRow = ({ url, onDelete, onQr }: Props) => {
         </div>
       </td>
       <td className="px-6 py-4">
-        <div className="flex flex-row items-center">
+        <div className="flex flex-row items-center max-w-xl">
           <img
             src={`https://www.google.com/s2/favicons?domain=${url.longUrl}&sz=128`}
             alt=""
             className="w-8 h-8 p-1 mr-2"
           />
-          <div className="truncate">{url.longUrl}</div>
+          <div className="">{url.longUrl}</div>
         </div>
       </td>
       <td className="px-6 py-4 cursor-pointer flex items-center justify-center">

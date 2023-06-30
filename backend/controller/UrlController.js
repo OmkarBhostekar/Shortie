@@ -2,6 +2,7 @@ const catchAsync = require("../utils/catchAsync");
 var base62 = require("base62-random");
 const Url = require("../model/Url");
 const User = require("../model/User");
+const bcrypt = require("bcryptjs");
 
 const getUserUrls = catchAsync(async (req, res, next) => {
   const uid = req.query.id;
@@ -31,17 +32,32 @@ const checkTiny = async (tiny) => {
   return true;
 };
 
+const checkShortieExists = catchAsync(async (req, res, next) => {
+  const shortie = req.body.shortie;
+  const exists = await checkTiny(shortie);
+  res.status(200).json({
+    status: "success",
+    data: exists ? "Available" : "Not Available",
+  });
+});
+
 const createUrl = catchAsync(async (req, res, next) => {
-  const { uid, longUrl } = req.body;
-  console.log(uid, longUrl);
+  const { uid, longUrl, shortie, pass } = req.body;
+  console.log(uid, longUrl, shortie, pass);
   let tiny = base62(7);
+  if (shortie) tiny = shortie;
   while (!(await checkTiny(tiny))) {
     tiny = base62(7);
+  }
+  let hashed = null;
+  if (pass) {
+    hashed = await bcrypt.hash(pass, 12);
   }
   const url = await Url.create({
     shortUrl: tiny,
     longUrl: longUrl,
     user: uid,
+    password: hashed,
   });
   const user = await User.findById(uid);
   user.urls.push(url._id);
@@ -53,7 +69,30 @@ const createUrl = catchAsync(async (req, res, next) => {
     },
   });
 });
-const deleteUrl = async (req, res, next) => {
+
+const checkUrlPassword = catchAsync(async (req, res, next) => {
+  const shortie = req.body.shortie;
+  const pass = req.body.pass;
+  const url = await Url.findOne({ shortUrl: shortie });
+  console.log(url);
+  if (!url || !url.password) {
+    throw new Error("Url not found");
+  }
+  const match = await bcrypt.compare(pass, url.password);
+  if (!match) {
+    res.status(200).json({
+      status: "success",
+      data: false,
+    });
+  } else {
+    res.status(200).json({
+      status: "success",
+      data: true,
+    });
+  }
+});
+
+const deleteUrl = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const url = await Url.find({ _id: id });
   if (url.length > 0) {
@@ -66,7 +105,7 @@ const deleteUrl = async (req, res, next) => {
     status: "success",
     data: null,
   });
-};
+});
 const toggleUrlStatus = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const url = await Url.findById(id);
@@ -87,7 +126,10 @@ const fetchUrl = catchAsync(async (req, res, next) => {
   await url.save();
   res.status(200).json({
     status: "success",
-    data: url.longUrl,
+    data: {
+      url: url.longUrl,
+      pass: url.password ? true : false,
+    },
   });
 });
 
@@ -97,4 +139,6 @@ module.exports = {
   fetchUrl,
   getUserUrls,
   toggleUrlStatus,
+  checkShortieExists,
+  checkUrlPassword,
 };

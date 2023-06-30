@@ -1,26 +1,46 @@
 import {
   Alert,
+  Breadcrumbs,
   Button,
   Dialog,
   DialogBody,
   DialogFooter,
   DialogHeader,
+  Input,
+  Typography,
 } from "@material-tailwind/react";
 import UrlsTable from "../components/Table/UrlsTable";
 import TopBar from "../components/TopBar";
 import { User } from "../utils/types/User";
-import { CheckBadgeIcon, XCircleIcon } from "@heroicons/react/24/outline";
+import {
+  CheckBadgeIcon,
+  InformationCircleIcon,
+  LockClosedIcon,
+  LockOpenIcon,
+  XCircleIcon,
+} from "@heroicons/react/24/outline";
 import { useAppContext } from "../utils/hooks/useAppContext";
 import { useState } from "react";
-import DeleteDialog from "../components/DeleteDialog";
+import DeleteDialog from "../components/Dialogs/DeleteDialog";
 import QRCode from "qrcode.react";
+import QrDialog from "../components/Dialogs/QrDialog";
+import CreateDialog from "../components/Dialogs/CreateDialog";
 
 type Props = {
   user: User | null;
 };
 
 const Home = ({ user }: Props) => {
-  const { noti, setNoti, fetchUrls, showNotification } = useAppContext();
+  const {
+    noti,
+    setNoti,
+    fetchUrls,
+    showNotification,
+    createModal,
+    setCreateModal,
+    createUrl,
+    setCreateUrl,
+  } = useAppContext();
   const [open, setOpen] = useState(false);
   const [qrModal, setQrModal] = useState(false);
   const [delId, setDelId] = useState("");
@@ -37,6 +57,7 @@ const Home = ({ user }: Props) => {
 
   const handleOpen = () => setOpen(!open);
   const handleOpenQr = () => setQrModal(!qrModal);
+  const handleOpenCreate = () => setCreateModal(!createModal);
 
   const onDownload = async () => {
     const canvas = document.getElementById("123456");
@@ -81,47 +102,16 @@ const Home = ({ user }: Props) => {
           <></>
         )}
       </div>
-      <Dialog
-        open={qrModal}
-        handler={handleOpenQr}
-        animate={{
-          mount: { scale: 1, y: 0 },
-          unmount: { scale: 0.9, y: -100 },
-        }}
-        className="bg-[#181E29]/25 p-3 rounded-xl"
-      >
-        <DialogHeader className="text-xl text-[#C9CED6] items-center justify-around flex">
-          <div className="">Share this QR code to your friends!</div>
-        </DialogHeader>
-        <DialogBody className="">
-          <div
-            style={{
-              height: "auto",
-              margin: "0 auto",
-              maxWidth: 256,
-              width: "100%",
-            }}
-          >
-            <QRCode
-              id="123456"
-              value={qrUrl}
-              size={250}
-              level={"H"}
-              includeMargin={true}
-            />
-          </div>
-        </DialogBody>
-        <DialogFooter className="flex justify-center items-center">
-          <Button
-            className="w-1/2"
-            variant="gradient"
-            color="blue"
-            onClick={onDownload}
-          >
-            <span>Download</span>
-          </Button>
-        </DialogFooter>
-      </Dialog>
+      <CreateDialog
+        createModal={createModal}
+        handleOpenCreate={handleOpenCreate}
+      />
+      <QrDialog
+        qrModal={qrModal}
+        handleOpenQr={handleOpenQr}
+        qrUrl={qrUrl}
+        onDownload={onDownload}
+      />
       <DeleteDialog open={open} handleOpen={handleOpen} onDelete={onDelete} />
     </div>
   );
