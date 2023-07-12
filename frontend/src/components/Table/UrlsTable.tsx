@@ -13,7 +13,7 @@ const UrlsTable = ({ user, onDelete, onQr }: Props) => {
   const { urls, fetchUrls } = useAppContext();
 
   useEffect(() => {
-    fetchUrls(user?.id as string);
+    fetchUrls(user?.token as string);
   }, []);
 
   return (
@@ -48,7 +48,14 @@ const UrlsTable = ({ user, onDelete, onQr }: Props) => {
             </thead>
             <tbody>
               {urls.map((url) => {
-                return <TableRow url={url} onDelete={onDelete} onQr={onQr} />;
+                return (
+                  <TableRow
+                    token={user?.token as string}
+                    url={url}
+                    onDelete={onDelete}
+                    onQr={onQr}
+                  />
+                );
               })}
             </tbody>
           </table>

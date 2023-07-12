@@ -15,11 +15,12 @@ import {
 import { useState } from "react";
 type Props = {
   url: Url;
+  token: string;
   onDelete: (id: string) => void;
   onQr: (url: string) => void;
 };
 
-const TableRow = ({ url, onDelete, onQr }: Props) => {
+const TableRow = ({ url, onDelete, onQr, token }: Props) => {
   const dateFormatted = new Date(url.created).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -29,19 +30,22 @@ const TableRow = ({ url, onDelete, onQr }: Props) => {
   const { fetchUrls, showNotification } = useAppContext();
 
   const toggleActive = async () => {
-    await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls/${url._id}`, {
+    fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls/${url._id}`, {
       method: "PATCH",
       headers: {
-        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         isActive: !url.isActive,
       }),
-    });
-    await fetchUrls(url.user);
-    showNotification(
-      `URL ${url.isActive ? "deactivated" : "activated"} successfully!`
-    );
+    })
+      .then(async (res) => {
+        await fetchUrls(token);
+        showNotification(
+          `URL ${url.isActive ? "deactivated" : "activated"} successfully!`
+        );
+      })
+      .catch((err) => console.log(err));
   };
 
   // const onDelete = async () => {

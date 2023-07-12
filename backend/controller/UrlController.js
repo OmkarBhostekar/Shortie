@@ -5,7 +5,7 @@ const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 
 const getUserUrls = catchAsync(async (req, res, next) => {
-  const uid = req.query.id;
+  const uid = req.user.id;
   const user = await User.findById(uid).populate("urls");
   console.log(uid);
   const urls = user.urls;
@@ -42,7 +42,8 @@ const checkShortieExists = catchAsync(async (req, res, next) => {
 });
 
 const createUrl = catchAsync(async (req, res, next) => {
-  const { uid, longUrl, shortie, pass } = req.body;
+  const { longUrl, shortie, pass } = req.body;
+  const uid = req.user.id;
   console.log(uid, longUrl, shortie, pass);
   let tiny = base62(7);
   if (shortie) tiny = shortie;
@@ -95,11 +96,13 @@ const checkUrlPassword = catchAsync(async (req, res, next) => {
 const deleteUrl = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const url = await Url.find({ _id: id });
-  if (url.length > 0) {
+  if (url.length > 0 && url[0].user == req.user.id) {
     await Url.findByIdAndDelete(id);
     const user = await User.findById(url[0].user);
     user.urls.pull(url[0]._id);
     await user.save();
+  } else {
+    throw new Error("Url not found");
   }
   res.status(200).json({
     status: "success",
@@ -109,6 +112,7 @@ const deleteUrl = catchAsync(async (req, res, next) => {
 const toggleUrlStatus = catchAsync(async (req, res, next) => {
   const id = req.params.id;
   const url = await Url.findById(id);
+  if (!url || !url.user.equals(req.user.id)) throw new Error("Url not found");
   url.isActive = url.isActive != true;
   await url.save();
   res.status(200).json({

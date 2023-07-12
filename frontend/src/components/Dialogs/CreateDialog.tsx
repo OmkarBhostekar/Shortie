@@ -34,17 +34,25 @@ const CreateDialog = ({ createModal, handleOpenCreate }: Props) => {
     // checks
 
     await axios
-      .post(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls`, {
-        uid: user?.id,
-        longUrl: createUrl,
-        shortie: shortie,
-        pass: isPublic ? "" : pass,
-      })
+      .post(
+        `${import.meta.env.VITE_APP_BACKEND_URL}/api/urls`,
+        {
+          uid: user?.id,
+          longUrl: createUrl,
+          shortie: shortie,
+          pass: isPublic ? "" : pass,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.token}`,
+          },
+        }
+      )
       .then((response) => {
         setCreateUrl("");
         showNotification("Url Shortened successfully!");
         handleOpenCreate();
-        fetchUrls(user?.id as string);
+        fetchUrls(user?.token as string);
       })
       .catch((error) => {
         console.log(error);

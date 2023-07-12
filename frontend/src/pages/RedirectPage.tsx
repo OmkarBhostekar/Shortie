@@ -65,7 +65,13 @@ const RedirectPage = () => {
     return (
       <div className="h-screen w-screen flex flex-col text-2xl text-blue-500 items-center jce">
         <div className="flex-flex-col m-auto items-center justify-center pb-32">
-          <div className="mt-4 text-lg">Enter the password to continue</div>
+          <div className="mb-24 text-red-600">
+            This link is password protected
+          </div>
+
+          <div className="mt-4 text-lg text-center">
+            Enter the password to continue
+          </div>
           <div className="mt-4">
             <Input
               className="border-2 border-blue-500 rounded-md p-1 text-white"

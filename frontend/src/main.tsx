@@ -6,11 +6,11 @@ import { AuthContextProvider } from "./context/AuthContext.tsx";
 import { AppContextProvider } from "./context/AppContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
-    <AuthContextProvider>
-      <AppContextProvider>
-        <App />
-      </AppContextProvider>
-    </AuthContextProvider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <AuthContextProvider>
+    <AppContextProvider>
+      <App />
+    </AppContextProvider>
+  </AuthContextProvider>
+  // </React.StrictMode>
 );

@@ -49,10 +49,13 @@ const Home = ({ user }: Props) => {
   const onDelete = async () => {
     await fetch(`${import.meta.env.VITE_APP_BACKEND_URL}/api/urls/${delId}`, {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${user?.token}`,
+      },
     });
     handleOpen();
     showNotification("URL deleted successfully!");
-    await fetchUrls(user?.id as string);
+    await fetchUrls(user?.token as string);
   };
 
   const handleOpen = () => setOpen(!open);
