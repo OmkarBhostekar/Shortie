@@ -15,6 +15,9 @@ app.use(bodyParser.json());
 
 app.use("/api/urls", urlRoutes);
 app.use("/api/users", userRoutes);
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
 
 console.log(process.env.MONGODB_URL);
 
