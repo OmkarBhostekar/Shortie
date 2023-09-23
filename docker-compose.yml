@@ -2,8 +2,8 @@ version: '3.8'
 services:
   books:
     build:
-      context: ./books
+      context: ./backkend
       dockerfile: Dockerfile
-    container_name: books
+    container_name: shortie
     ports:
       - "8888:8888"
