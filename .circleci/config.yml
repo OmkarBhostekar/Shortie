@@ -11,7 +11,7 @@ jobs:
           name: Build Docker Image
           command: |
             cd backend
-            docker build --build-arg JWT_SECRET=$JWT_SECRETs --build-arg MONGODB_URL=$MONGODB_URLs -t vaibhavgawad/shortie:1 .
+            docker build --build-arg JWT_SECRET="$JWT_SECRETs" --build-arg MONGODB_URL="$MONGODB_URLs" -t vaibhavgawad/shortie:1 .
       - run:
           name: Push Docker Image
           command: |
