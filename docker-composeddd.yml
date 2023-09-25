@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  shortie:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: shortie
+    env_file: ./backend/.env
+    ports:
+      - 4000:4000
