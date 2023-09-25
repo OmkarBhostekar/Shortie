@@ -1,6 +1,4 @@
-FROM alpine:3.17
-
-ENV NODE_VERSION 18.18.0
+FROM node:18.10.0-alpine3.13
 
 WORKDIR /app/shortie
 
