@@ -1,7 +1,7 @@
 FROM node:18.12.1
 
 # Set the working directory inside the container
-WORKDIR /usr/src/app
+WORKDIR /app/backend
 
 # Copy package.json and package-lock.json to the container
 COPY package*.json ./
@@ -13,7 +13,7 @@ RUN npm install
 COPY . .
 
 # Expose a port (if your app listens on a specific port)
-EXPOSE 4444
+EXPOSE 4000
 
 # Define the command to run your application
-CMD ["node", "app.js"]
+CMD ["npm", "start"]
