@@ -1,9 +1,8 @@
-version: '3.8'
+version: '3'
 services:
-  shortie:
+  node-app:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: shortie
     ports:
       - "4444:4444"
