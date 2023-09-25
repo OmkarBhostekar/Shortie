@@ -1,4 +1,4 @@
-FROM node:18.10.0-alpine3.13
+FROM node:18
 
 WORKDIR /app/shortie
 
