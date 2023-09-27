@@ -1,6 +1,6 @@
 name: shortie
 workdir: /app
-image: ./backend
+image: shortie-shortie:okteto
 command: ["npm", "start"]
 environment:
   - JWT_SECRET=${JWT_SECRET}
