@@ -1,0 +1,9 @@
+name: shortie
+workdir: /app
+image: ./backend
+command: ["npm", "start"]
+environment:
+  - JWT_SECRET=${JWT_SECRET}
+  - MONGODB_URL=${MONGODB_URL}
+forward:
+  - 4000:4000
